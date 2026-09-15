@@ -21,8 +21,8 @@ export const RunHistoryView: React.FC<RunHistoryViewProps> = ({
             <History className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-textMain">Historique de vos Runs & Seeds</h2>
-            <p className="text-xs text-textSecondary">Relancez ou partagez n'importe quelle configuration en 1 clic</p>
+            <h2 className="text-lg font-bold text-textMain">Run History & Seeds</h2>
+            <p className="text-xs text-textSecondary">Reload or share any configuration in 1 click</p>
           </div>
         </div>
 
@@ -31,7 +31,7 @@ export const RunHistoryView: React.FC<RunHistoryViewProps> = ({
             onClick={onClearHistory}
             className="flex items-center gap-2 px-3 py-1.5 bg-error/15 text-error border border-error/30 hover:bg-error/25 rounded-xl text-xs font-semibold transition"
           >
-            <Trash2 className="w-4 h-4" /> Effacer l'historique
+            <Trash2 className="w-4 h-4" /> Clear History
           </button>
         )}
       </div>
@@ -39,8 +39,8 @@ export const RunHistoryView: React.FC<RunHistoryViewProps> = ({
       {history.length === 0 ? (
         <div className="text-center py-16 bg-surface border border-borderDark rounded-2xl space-y-3">
           <Dices className="w-10 h-10 text-textSecondary mx-auto animate-bounce" />
-          <p className="text-sm font-semibold text-textMain">Aucune run enregistrée pour l'instant</p>
-          <p className="text-xs text-textSecondary">Vos seeds générées et exportées apparaîtront ici automatiquement.</p>
+          <p className="text-sm font-semibold text-textMain">No runs recorded yet</p>
+          <p className="text-xs text-textSecondary">Your generated & exported seeds will appear here automatically.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -60,15 +60,15 @@ export const RunHistoryView: React.FC<RunHistoryViewProps> = ({
 
               <div className="space-y-1 text-xs">
                 <div className="flex justify-between">
-                  <span className="text-textSecondary">Profil Preset:</span>
+                  <span className="text-textSecondary">Preset:</span>
                   <span className="font-semibold text-textMain capitalize">{entry.preset}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-textSecondary">Segments Portes:</span>
+                  <span className="text-textSecondary">Door Segments:</span>
                   <span className="font-semibold text-textMain">{entry.config.doors.segmentsCount} Segments</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-textSecondary">Difficulté Ennemis:</span>
+                  <span className="text-textSecondary">Enemy Difficulty:</span>
                   <span className="font-semibold text-error">{entry.config.enemies.difficultyCurve}%</span>
                 </div>
               </div>
@@ -77,7 +77,7 @@ export const RunHistoryView: React.FC<RunHistoryViewProps> = ({
                 onClick={() => onLoadConfig(entry.config)}
                 className="w-full flex items-center justify-center gap-2 py-2 bg-primary/15 hover:bg-primary/25 text-primary border border-primary/30 rounded-xl text-xs font-bold transition"
               >
-                <Play className="w-4 h-4" /> Relancer cette Seed
+                <Play className="w-4 h-4" /> Reload This Seed
               </button>
             </div>
           ))}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Cpu, Minus, Square, X, FolderOpen, ShieldCheck } from 'lucide-react';
+import { Minus, Square, X, Cpu, HardDrive } from 'lucide-react';
 import { isDesktopApp } from '../utils/electronBridge';
 
 interface DesktopTitleBarProps {
@@ -11,51 +11,51 @@ export const DesktopTitleBar: React.FC<DesktopTitleBarProps> = ({ gamePath, onBr
   const isDesktop = isDesktopApp();
 
   return (
-    <div className="h-9 bg-[#0b0b0f] border-b border-white/[0.06] flex items-center justify-between px-3 select-none text-xs z-50 drag-handle">
-      <div className="flex items-center space-x-2.5 no-drag">
-        <div className="flex items-center space-x-1.5 bg-primary/15 border border-primary/30 px-2 py-0.5 rounded-full">
-          <span className="w-1.5 h-1.5 rounded-full bg-primary animate-ping" />
-          <span className="font-mono text-[10px] font-bold tracking-wider text-primary uppercase">
-            REENGINE LUA INJECTOR v2.9
-          </span>
-        </div>
-        <div className="h-3 w-[1px] bg-white/10" />
-        <span className="text-textSecondary text-[11px] font-medium hidden sm:inline-flex items-center gap-1.5">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> BioRand Studio Native Mode
+    <div className="bg-[#121212] border-b border-[#2F2F2F] text-xs select-none flex items-center justify-between h-9 px-3 drag-handle">
+      {/* Window Title & Icon */}
+      <div className="flex items-center space-x-2 text-gray-300 font-semibold no-drag">
+        <Cpu className="w-4 h-4 text-[#9E7FFF]" />
+        <span>BioRand RE9 Studio</span>
+        <span className="bg-[#9E7FFF]/20 text-[#9E7FFF] text-[10px] px-1.5 py-0.5 rounded border border-[#9E7FFF]/30">
+          v1.0.0 Win64 .EXE
         </span>
       </div>
 
-      <div className="hidden md:flex items-center space-x-2 bg-surface/80 border border-white/5 px-2.5 py-0.5 rounded-md max-w-sm truncate text-[11px] font-mono text-textSecondary no-drag">
-        <Cpu className="w-3.5 h-3.5 text-secondary shrink-0" />
-        <span className="truncate" title={gamePath}>{gamePath}</span>
+      {/* RE9 Directory Bar Indicator */}
+      <div className="hidden md:flex items-center space-x-2 no-drag bg-[#1e1e1e] px-2.5 py-1 rounded border border-[#2A2A2A] text-gray-400">
+        <HardDrive className="w-3.5 h-3.5 text-secondary" />
+        <span className="text-[11px] text-gray-300 max-w-xs truncate" title={gamePath}>
+          {gamePath || 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\RESIDENT EVIL 9'}
+        </span>
         <button
           onClick={onBrowsePath}
-          className="text-xs text-primary hover:text-white transition-colors ml-1 font-sans"
+          className="text-[10px] text-secondary hover:text-white underline ml-1"
         >
-          <FolderOpen className="w-3.5 h-3.5" />
+          Change Path
         </button>
       </div>
 
+      {/* Desktop Window Controls */}
       <div className="flex items-center space-x-1 no-drag">
         {isDesktop ? (
           <>
             <button
               onClick={() => window.electronAPI?.minimize()}
-              className="w-7 h-6 flex items-center justify-center rounded hover:bg-white/10 text-textSecondary hover:text-white transition-colors"
+              className="p-1.5 hover:bg-[#2F2F2F] rounded text-gray-400 hover:text-white transition-colors"
               title="Minimize"
             >
               <Minus className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={() => window.electronAPI?.maximize()}
-              className="w-7 h-6 flex items-center justify-center rounded hover:bg-white/10 text-textSecondary hover:text-white transition-colors"
+              className="p-1.5 hover:bg-[#2F2F2F] rounded text-gray-400 hover:text-white transition-colors"
               title="Maximize"
             >
               <Square className="w-3 h-3" />
             </button>
             <button
               onClick={() => window.electronAPI?.close()}
-              className="w-7 h-6 flex items-center justify-center rounded hover:bg-red-500/80 text-textSecondary hover:text-white transition-colors"
+              className="p-1.5 hover:bg-red-600 rounded text-gray-400 hover:text-white transition-colors"
               title="Close"
             >
               <X className="w-3.5 h-3.5" />
@@ -63,7 +63,7 @@ export const DesktopTitleBar: React.FC<DesktopTitleBarProps> = ({ gamePath, onBr
           </>
         ) : (
           <div className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-            Preview Mode
+            Executable Preview Mode
           </div>
         )}
       </div>

@@ -15,8 +15,8 @@ export const DoorSettingsCard: React.FC<DoorSettingsCardProps> = ({ settings, on
           <DoorClosed className="w-5 h-5" />
         </div>
         <div>
-          <h2 className="text-lg font-bold text-textMain">🚪 Randomization des Portes</h2>
-          <p className="text-xs text-textSecondary">Génération du graphe de progression et découpage par segments</p>
+          <h2 className="text-lg font-bold text-textMain">Door Randomization</h2>
+          <p className="text-xs text-textSecondary">Progression graph generation & segment splitting</p>
         </div>
       </div>
 
@@ -25,7 +25,7 @@ export const DoorSettingsCard: React.FC<DoorSettingsCardProps> = ({ settings, on
         <div>
           <div className="flex justify-between text-sm mb-2">
             <span className="text-textMain font-medium flex items-center gap-2">
-              <Layers className="w-4 h-4 text-primary" /> Nombre de segments
+              <Layers className="w-4 h-4 text-primary" /> Number of Segments
             </span>
             <span className="font-mono text-primary font-bold">{settings.segmentsCount} Segments</span>
           </div>
@@ -39,10 +39,10 @@ export const DoorSettingsCard: React.FC<DoorSettingsCardProps> = ({ settings, on
             className="w-full accent-primary bg-background rounded-lg h-2"
           />
           <div className="flex justify-between text-[11px] text-textSecondary mt-1">
-            <span>1 (Linéaire)</span>
+            <span>1 (Linear)</span>
             <span>2 (Standard)</span>
-            <span>3 (Complexe)</span>
-            <span>4 (Super labyrinthique)</span>
+            <span>3 (Complex)</span>
+            <span>4 (Labyrinth)</span>
           </div>
         </div>
 
@@ -50,9 +50,9 @@ export const DoorSettingsCard: React.FC<DoorSettingsCardProps> = ({ settings, on
         <div>
           <div className="flex justify-between text-sm mb-2">
             <span className="text-textMain font-medium flex items-center gap-2">
-              <GitCommit className="w-4 h-4 text-secondary" /> Taille moyenne de segment
+              <GitCommit className="w-4 h-4 text-secondary" /> Average Segment Size
             </span>
-            <span className="font-mono text-secondary font-bold">{settings.averageSegmentSize} Salles</span>
+            <span className="font-mono text-secondary font-bold">{settings.averageSegmentSize} Rooms</span>
           </div>
           <input
             type="range"
@@ -75,8 +75,8 @@ export const DoorSettingsCard: React.FC<DoorSettingsCardProps> = ({ settings, on
               className="w-4 h-4 accent-primary rounded"
             />
             <div>
-              <span className="text-sm font-semibold text-textMain block">Graphe de progression garanti complétable</span>
-              <span className="text-xs text-textSecondary">Résolution mathématique empêchant tout blocage logique (softlock)</span>
+              <span className="text-sm font-semibold text-textMain block">Guaranteed Completability Graph</span>
+              <span className="text-xs text-textSecondary">Mathematically prevents softlocks by ensuring logical progression</span>
             </div>
           </label>
 
@@ -88,8 +88,8 @@ export const DoorSettingsCard: React.FC<DoorSettingsCardProps> = ({ settings, on
               className="w-4 h-4 accent-primary rounded"
             />
             <div>
-              <span className="text-sm font-semibold text-textMain block">Raccourcis débloquables aléatoires</span>
-              <span className="text-xs text-textSecondary">Ouvre des passages secrets vers les segments précédents</span>
+              <span className="text-sm font-semibold text-textMain block">Unlockable Shortcuts</span>
+              <span className="text-xs text-textSecondary">Opens secret passages to previous segments</span>
             </div>
           </label>
 
@@ -102,9 +102,9 @@ export const DoorSettingsCard: React.FC<DoorSettingsCardProps> = ({ settings, on
             />
             <div>
               <span className="text-sm font-semibold text-textMain block flex items-center gap-1.5">
-                <Shield className="w-3.5 h-3.5 text-success" /> Salle avec coffre accessible au départ
+                <Shield className="w-3.5 h-3.5 text-success" /> Safe Room with Storage Available From Start
               </span>
-              <span className="text-xs text-textSecondary">Assure un accès immédiat au coffre et à la machine à écrire</span>
+              <span className="text-xs text-textSecondary">Ensures immediate access to storage and typewriter</span>
             </div>
           </label>
         </div>

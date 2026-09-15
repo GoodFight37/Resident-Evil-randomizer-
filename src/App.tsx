@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { DesktopTitleBar } from './components/DesktopTitleBar';
 import { Header } from './components/Header';
 import { TabsNav, TabType } from './components/TabsNav';
@@ -17,75 +17,85 @@ import { RandomizerConfig, PresetType, RunHistoryEntry } from './types/randomize
 import { DEFAULT_PRESETS } from './utils/constants';
 import { exportModZipPackage } from './utils/exporter';
 
+// Deep clone helper to avoid mutating presets (prevents memory sharing leaks)
+const deepClone = <T,>(obj: T): T => JSON.parse(JSON.stringify(obj));
+
 export function App() {
   const [activeTab, setActiveTab] = useState<TabType>('settings');
-  const [config, setConfig] = useState<RandomizerConfig>(DEFAULT_PRESETS.standard);
+  const [config, setConfig] = useState<RandomizerConfig>(() => deepClone(DEFAULT_PRESETS.standard));
   const [gamePath, setGamePath] = useState<string>(() => {
-    return localStorage.getItem('biorand_re9_path') || 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\RESIDENT EVIL 9';
+    try {
+      return localStorage.getItem('biorand_re9_path') || 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\RESIDENT EVIL 9';
+    } catch { return 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\RESIDENT EVIL 9'; }
   });
   const [history, setHistory] = useState<RunHistoryEntry[]>(() => {
-    const saved = localStorage.getItem('biorand_re9_history');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('biorand_re9_history');
+      return saved ? JSON.parse(saved) : [];
+    } catch { return []; }
   });
 
+  // Persist history - throttled to avoid rapid writes (memory pressure)
   useEffect(() => {
-    localStorage.setItem('biorand_re9_history', JSON.stringify(history));
+    try {
+      // Cap at 20 entries, stringify once
+      const toStore = JSON.stringify(history.slice(0, 20));
+      localStorage.setItem('biorand_re9_history', toStore);
+    } catch (e) {
+      console.warn('Failed to save history', e);
+    }
   }, [history]);
 
   useEffect(() => {
-    localStorage.setItem('biorand_re9_path', gamePath);
+    try { localStorage.setItem('biorand_re9_path', gamePath); } catch {}
   }, [gamePath]);
 
-  const handleBrowsePath = async () => {
+  const handleBrowsePath = useCallback(async () => {
     if (window.electronAPI?.selectGameDirectory) {
       const selected = await window.electronAPI.selectGameDirectory();
-      if (selected) {
-        setGamePath(selected);
-      }
+      if (selected) setGamePath(selected);
     } else {
       const manual = prompt('Enter your Resident Evil 9 Directory path:', gamePath);
-      if (manual) {
-        setGamePath(manual);
-      }
+      if (manual) setGamePath(manual);
     }
-  };
+  }, [gamePath]);
 
-  const handleApplyPreset = (preset: PresetType) => {
+  const handleApplyPreset = useCallback((preset: PresetType) => {
     if (DEFAULT_PRESETS[preset]) {
-      const newConfig = { ...DEFAULT_PRESETS[preset] };
-      setConfig(newConfig);
+      setConfig(deepClone(DEFAULT_PRESETS[preset]));
     }
-  };
+  }, []);
 
-  const handleGenerateSeed = () => {
+  const handleGenerateSeed = useCallback(() => {
     const randomSeedStr = 'RE9-' + Math.random().toString(36).substring(2, 8).toUpperCase() + '-' + Math.floor(100 + Math.random() * 900);
     setConfig(prev => ({ ...prev, seed: randomSeedStr, preset: 'custom' }));
-  };
+  }, []);
 
-  const handleExportMod = async () => {
+  const handleExportMod = useCallback(async () => {
     await exportModZipPackage(config);
-
     const newEntry: RunHistoryEntry = {
       id: Date.now().toString(),
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      timestamp: new Date().toLocaleString([], { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' }),
       seed: config.seed,
       preset: config.preset,
-      config: { ...config }
+      config: deepClone(config)
     };
-
     setHistory(prev => [newEntry, ...prev.slice(0, 19)]);
-  };
+  }, [config]);
+
+  // Estimate completion time like classic BioRand (brown text)
+  const estimate = useMemo(() => {
+    const rooms = config.doors.segmentsCount * config.doors.averageSegmentSize * 4;
+    const base = Math.round(rooms * 1.2);
+    const min = Math.max(15, base - 10);
+    const max = base + 25;
+    const diff = config.enemies.difficultyCurve > 70 ? ' • High combat = longer' : config.enemies.difficultyCurve < 30 ? ' • Low combat = shorter' : '';
+    return `${min} - ${max} minutes${diff}`;
+  }, [config.doors.segmentsCount, config.doors.averageSegmentSize, config.enemies.difficultyCurve]);
 
   return (
-    <div className="min-h-screen bg-background text-textMain flex flex-col font-sans select-none bg-mesh-pattern relative">
-      {/* Background ambient lighting blur spheres */}
-      <div className="fixed top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="fixed bottom-1/4 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl pointer-events-none -z-10" />
-
-      {/* Desktop Native Window Title Bar */}
+    <div className="min-h-screen bg-background text-textMain flex flex-col font-sans select-none">
       <DesktopTitleBar gamePath={gamePath} onBrowsePath={handleBrowsePath} />
-
-      {/* Primary Header Studio Toolbar */}
       <Header
         config={config}
         onConfigChange={setConfig}
@@ -95,36 +105,79 @@ export function App() {
         gamePath={gamePath}
         onBrowsePath={handleBrowsePath}
       />
-
-      {/* Secondary Dynamic Tab Navigation */}
       <TabsNav activeTab={activeTab} onTabChange={setActiveTab} />
 
-      {/* Main Content Workspace Container */}
-      <main className="flex-1 pb-12 pt-4 px-4 sm:px-6 max-w-7xl mx-auto w-full">
+      <main className="flex-1 pb-12 max-w-7xl mx-auto w-full">
         {activeTab === 'settings' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fadeIn">
-            <DoorSettingsCard
-              settings={config.doors}
-              onChange={(doors) => setConfig({ ...config, doors, preset: 'custom' })}
-            />
-            <KeySettingsCard
-              settings={config.keys}
-              onChange={(keys) => setConfig({ ...config, keys, preset: 'custom' })}
-            />
-            <ItemSettingsCard
-              settings={config.items}
-              onChange={(items) => setConfig({ ...config, items, preset: 'custom' })}
-            />
-            <EnemySettingsCard
-              settings={config.enemies}
-              onChange={(enemies) => setConfig({ ...config, enemies, preset: 'custom' })}
-            />
-            <div className="lg:col-span-2">
+          <div className="p-6 space-y-8 animate-fadeIn">
+            {/* Intro Banner - English only, clarifies workflow like BioRand */}
+            <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div>
+                <h2 className="text-sm font-bold text-textMain">Configure Your Randomized Run</h2>
+                <p className="text-xs text-textSecondary mt-1">All settings are deterministic with your <span className="text-primary font-mono font-bold">{config.seed}</span> seed. Change a preset or tweak below, then click <span className="text-white font-semibold">Inject & Install</span> or <span className="text-white font-semibold">Export ZIP</span>.</p>
+              </div>
+              <div className="text-xs font-mono bg-amber-950/30 border border-amber-800/30 text-amber-200 px-3 py-2 rounded-xl whitespace-nowrap">
+                Estimate: <span className="font-bold">{estimate}</span>
+              </div>
+            </div>
+
+            {/* Section 1: World & Progression - Groups Door + Key like BioRand's "Randomize Doors" + "Randomize Items > keys" */}
+            <section className="space-y-3">
+              <div className="flex items-center gap-2 border-b border-border pb-2">
+                <span className="w-6 h-6 rounded bg-primary text-background text-xs font-bold flex items-center justify-center">1</span>
+                <h3 className="text-sm font-bold tracking-widest uppercase text-textMain">World & Progression</h3>
+                <span className="text-xs text-textSecondary">— Doors, segments, keys & routing (BioRand-style door rando)</span>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <DoorSettingsCard
+                  settings={config.doors}
+                  onChange={(doors) => setConfig(prev => ({ ...prev, doors, preset: 'custom' }))}
+                />
+                <KeySettingsCard
+                  settings={config.keys}
+                  onChange={(keys) => setConfig(prev => ({ ...prev, keys, preset: 'custom' }))}
+                />
+              </div>
+            </section>
+
+            {/* Section 2: Items & Economy - Like BioRand's "Randomize Items" with sliders */}
+            <section className="space-y-3">
+              <div className="flex items-center gap-2 border-b border-border pb-2">
+                <span className="w-6 h-6 rounded bg-accent text-background text-xs font-bold flex items-center justify-center">2</span>
+                <h3 className="text-sm font-bold tracking-widest uppercase text-textMain">Items & Inventory</h3>
+                <span className="text-xs text-textSecondary">— Pool, starting weapons, loot ratios (matches BioRand item distribution)</span>
+              </div>
+              <ItemSettingsCard
+                settings={config.items}
+                onChange={(items) => setConfig(prev => ({ ...prev, items, preset: 'custom' }))}
+              />
+            </section>
+
+            {/* Section 3: Combat */}
+            <section className="space-y-3">
+              <div className="flex items-center gap-2 border-b border-border pb-2">
+                <span className="w-6 h-6 rounded bg-error text-white text-xs font-bold flex items-center justify-center">3</span>
+                <h3 className="text-sm font-bold tracking-widest uppercase text-textMain">Combat</h3>
+                <span className="text-xs text-textSecondary">— Enemy difficulty, density & crash blacklist</span>
+              </div>
+              <EnemySettingsCard
+                settings={config.enemies}
+                onChange={(enemies) => setConfig(prev => ({ ...prev, enemies, preset: 'custom' }))}
+              />
+            </section>
+
+            {/* Section 4: Presentation */}
+            <section className="space-y-3">
+              <div className="flex items-center gap-2 border-b border-border pb-2">
+                <span className="w-6 h-6 rounded bg-secondary text-background text-xs font-bold flex items-center justify-center">4</span>
+                <h3 className="text-sm font-bold tracking-widest uppercase text-textMain">Presentation</h3>
+                <span className="text-xs text-textSecondary">— Character swap, NPC voices & music (safe for cutscenes)</span>
+              </div>
               <CharacterAudioCard
                 settings={config.characterAudio}
-                onChange={(characterAudio) => setConfig({ ...config, characterAudio, preset: 'custom' })}
+                onChange={(characterAudio) => setConfig(prev => ({ ...prev, characterAudio, preset: 'custom' }))}
               />
-            </div>
+            </section>
           </div>
         )}
 
@@ -135,7 +188,7 @@ export function App() {
           <RunHistoryView
             history={history}
             onLoadConfig={(cfg) => {
-              setConfig(cfg);
+              setConfig(deepClone(cfg));
               setActiveTab('settings');
             }}
             onClearHistory={() => setHistory([])}

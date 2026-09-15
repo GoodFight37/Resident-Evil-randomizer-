@@ -16,15 +16,15 @@ export const CharacterAudioCard: React.FC<CharacterAudioCardProps> = ({ settings
           <UserCheck className="w-5 h-5" />
         </div>
         <div>
-          <h2 className="text-lg font-bold text-textMain">👤 Swapper Personnage & Audio/Musiques</h2>
-          <p className="text-xs text-textSecondary">Changement de modèle jouable, voix synchro et musiques par ambiance</p>
+          <h2 className="text-lg font-bold text-textMain">Character & Audio / Music</h2>
+          <p className="text-xs text-textSecondary">Playable model swap, voice sync & mood-based music</p>
         </div>
       </div>
 
       <div className="space-y-6">
         {/* Playable Character Selection */}
         <div>
-          <label className="text-sm font-semibold text-textMain block mb-2">Personnage Jouable Substitué</label>
+          <label className="text-sm font-semibold text-textMain block mb-2">Playable Character Swap</label>
           <select
             value={settings.playableCharacter}
             onChange={(e) => onChange({ ...settings, playableCharacter: e.target.value })}
@@ -48,8 +48,8 @@ export const CharacterAudioCard: React.FC<CharacterAudioCardProps> = ({ settings
             <div className="flex items-center gap-2">
               <Mic className="w-4 h-4 text-secondary" />
               <div>
-                <span className="text-sm font-semibold text-textMain block">🎤 Randomization PNJ et Voix</span>
-                <span className="text-xs text-textSecondary">Mélange les voix et acteurs PNJ</span>
+                <span className="text-sm font-semibold text-textMain block">🎤 Randomize NPCs & Voices</span>
+                <span className="text-xs text-textSecondary">Shuffles NPC voices & actors</span>
               </div>
             </div>
           </label>
@@ -62,8 +62,8 @@ export const CharacterAudioCard: React.FC<CharacterAudioCardProps> = ({ settings
               className="w-4 h-4 accent-primary rounded"
             />
             <div>
-              <span className="text-sm font-semibold text-textMain block">Synchronisation Vocale du Modèle</span>
-              <span className="text-xs text-textSecondary">Aligne le timbre vocal sur le personnage sélectionné</span>
+              <span className="text-sm font-semibold text-textMain block">Sync Voice To Model</span>
+              <span className="text-xs text-textSecondary">Matches voice timbre to selected character</span>
             </div>
           </label>
         </div>
@@ -71,7 +71,7 @@ export const CharacterAudioCard: React.FC<CharacterAudioCardProps> = ({ settings
         {/* Music Randomization */}
         <div className="space-y-3 pt-2">
           <h3 className="text-sm font-bold text-textMain flex items-center gap-2">
-            <Music className="w-4 h-4 text-accent" /> 🎶 Soundtrack & Musique
+            <Music className="w-4 h-4 text-accent" /> 🎶 Soundtrack & Music
           </h3>
 
           <label className="flex items-center gap-3 p-3 bg-background border border-borderDark rounded-xl cursor-pointer hover:border-accent/50 transition">
@@ -82,8 +82,8 @@ export const CharacterAudioCard: React.FC<CharacterAudioCardProps> = ({ settings
               className="w-4 h-4 accent-accent rounded"
             />
             <div>
-              <span className="text-sm font-semibold text-textMain block">Mélange de la musique par genre</span>
-              <span className="text-xs text-textSecondary">Catégories cohérentes : [Calme / Inquiétant / Danger / Boss]</span>
+              <span className="text-sm font-semibold text-textMain block">Mood-Based Music Shuffle</span>
+              <span className="text-xs text-textSecondary">Consistent categories: [Calm / Eerie / Danger / Boss]</span>
             </div>
           </label>
 
@@ -96,10 +96,10 @@ export const CharacterAudioCard: React.FC<CharacterAudioCardProps> = ({ settings
             />
             <div>
               <span className="text-sm font-semibold text-textMain block flex items-center gap-1.5">
-                <Disc className="w-4 h-4 text-accent" /> Support des Musiques Personnalisées (Custom Folder)
+                <Disc className="w-4 h-4 text-accent" /> Custom Music Folder Support
               </span>
               <span className="text-xs text-textSecondary">
-                Lit automatiquement les fichiers déposés dans <code className="text-accent font-mono">custom/{'{tag}'}</code> (calm, eerie, danger)
+                Auto-loads files placed in <code className="text-accent font-mono">custom/{'{tag}'}</code> (calm, eerie, danger)
               </span>
             </div>
           </label>

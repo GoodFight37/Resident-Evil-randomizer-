@@ -28,15 +28,15 @@ export const ItemSettingsCard: React.FC<ItemSettingsCardProps> = ({ settings, on
           <Backpack className="w-5 h-5" />
         </div>
         <div>
-          <h2 className="text-lg font-bold text-textMain">🗡️ Inventaire & Randomization des Objets</h2>
-          <p className="text-xs text-textSecondary">Pool d'objets, armes de départ, munitions intelligentes et consommables</p>
+          <h2 className="text-lg font-bold text-textMain">Inventory & Item Randomization</h2>
+          <p className="text-xs text-textSecondary">Item pool, starting loadout, smart ammo & consumables</p>
         </div>
       </div>
 
       <div className="space-y-6">
         {/* Pool Mode */}
         <div>
-          <label className="text-sm font-semibold text-textMain block mb-2">Mode de Pool d'objets</label>
+          <label className="text-sm font-semibold text-textMain block mb-2">Item Pool Mode</label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <button
               onClick={() => onChange({ ...settings, poolMode: 'original_shuffle' })}
@@ -46,8 +46,8 @@ export const ItemSettingsCard: React.FC<ItemSettingsCardProps> = ({ settings, on
                   : 'border-borderDark bg-background text-textSecondary hover:text-textMain'
               }`}
             >
-              <div className="text-sm font-bold">Mélange du contenu d'origine</div>
-              <div className="text-xs text-textSecondary">Conserve exactement les quantités du jeu original</div>
+              <div className="text-sm font-bold">Shuffle Original Content</div>
+              <div className="text-xs text-textSecondary">Keeps original quantities, shuffles locations</div>
             </button>
             <button
               onClick={() => onChange({ ...settings, poolMode: 'full_random_replacement' })}
@@ -57,8 +57,8 @@ export const ItemSettingsCard: React.FC<ItemSettingsCardProps> = ({ settings, on
                   : 'border-borderDark bg-background text-textSecondary hover:text-textMain'
               }`}
             >
-              <div className="text-sm font-bold">Remplacement complet tiré au sort</div>
-              <div className="text-xs text-textSecondary">Remplacement total par types et pondérations aléatoires</div>
+              <div className="text-sm font-bold">Fully Randomized Replacement</div>
+              <div className="text-xs text-textSecondary">Full replacement by random types & weights</div>
             </button>
           </div>
         </div>
@@ -66,7 +66,7 @@ export const ItemSettingsCard: React.FC<ItemSettingsCardProps> = ({ settings, on
         {/* Starting Loadout Weapons */}
         <div>
           <label className="text-sm font-semibold text-textMain block mb-2">
-            🎒 Armes de départ (Jusqu'à 2 armes configurables)
+            Starting Weapons (Up to 2)
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {AVAILABLE_WEAPONS.map((w) => {
@@ -98,8 +98,8 @@ export const ItemSettingsCard: React.FC<ItemSettingsCardProps> = ({ settings, on
               className="w-4 h-4 accent-accent rounded"
             />
             <div>
-              <span className="text-sm font-semibold text-textMain block">🌿 Randomizer Objets Non-Clés</span>
-              <span className="text-xs text-textSecondary">Armes et consommables au sol</span>
+              <span className="text-sm font-semibold text-textMain block">Randomize Non-Key Items</span>
+              <span className="text-xs text-textSecondary">Weapons & consumables on ground</span>
             </div>
           </label>
 
@@ -111,8 +111,8 @@ export const ItemSettingsCard: React.FC<ItemSettingsCardProps> = ({ settings, on
               className="w-4 h-4 accent-accent rounded"
             />
             <div>
-              <span className="text-sm font-semibold text-textMain block">🎯 Munitions pour armes possédées</span>
-              <span className="text-xs text-textSecondary">Munitions générées uniquement si l'arme est possédée</span>
+              <span className="text-sm font-semibold text-textMain block">Ammo For Owned Weapons Only</span>
+              <span className="text-xs text-textSecondary">Only generates ammo if weapon is owned/found</span>
             </div>
           </label>
         </div>
@@ -120,13 +120,13 @@ export const ItemSettingsCard: React.FC<ItemSettingsCardProps> = ({ settings, on
         {/* Drop Ratios Sliders */}
         <div className="space-y-4 pt-2">
           <h3 className="text-sm font-bold text-textMain border-b border-borderDark pb-2 flex items-center gap-2">
-            <Droplet className="w-4 h-4 text-accent" /> Ratios de Loot (0 = Jamais)
+            <Droplet className="w-4 h-4 text-accent" /> Loot Ratios (0 = Never)
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <div className="flex justify-between text-xs mb-1">
-                <span className="text-textSecondary">Poudre à canon:</span>
+                <span className="text-textSecondary">Gunpowder:</span>
                 <span className="font-mono text-accent font-bold">{settings.dropRatioPowder}%</span>
               </div>
               <input
@@ -141,7 +141,7 @@ export const ItemSettingsCard: React.FC<ItemSettingsCardProps> = ({ settings, on
 
             <div>
               <div className="flex justify-between text-xs mb-1">
-                <span className="text-textSecondary">Munitions directes:</span>
+                <span className="text-textSecondary">Direct Ammo:</span>
                 <span className="font-mono text-accent font-bold">{settings.dropRatioAmmo}%</span>
               </div>
               <input
@@ -156,7 +156,7 @@ export const ItemSettingsCard: React.FC<ItemSettingsCardProps> = ({ settings, on
 
             <div>
               <div className="flex justify-between text-xs mb-1">
-                <span className="text-textSecondary">Soins (Herbes / Sprays):</span>
+                <span className="text-textSecondary">Healing (Herbs / Sprays):</span>
                 <span className="font-mono text-accent font-bold">{settings.dropRatioHealing}%</span>
               </div>
               <input
@@ -171,7 +171,7 @@ export const ItemSettingsCard: React.FC<ItemSettingsCardProps> = ({ settings, on
 
             <div>
               <div className="flex justify-between text-xs mb-1">
-                <span className="text-textSecondary">Rubans encreurs:</span>
+                <span className="text-textSecondary">Ink Ribbons:</span>
                 <span className="font-mono text-accent font-bold">{settings.dropRatioInkRibbons}%</span>
               </div>
               <input

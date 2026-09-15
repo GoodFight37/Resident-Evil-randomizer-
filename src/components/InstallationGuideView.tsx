@@ -6,10 +6,10 @@ export const InstallationGuideView: React.FC = () => {
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       <div className="bg-surface border border-borderDark p-6 rounded-2xl space-y-2 shadow-xl">
         <h2 className="text-xl font-bold text-textMain flex items-center gap-2">
-          <HelpCircle className="w-6 h-6 text-primary" /> Guide d'installation avec REFramework (Praydog)
+          <HelpCircle className="w-6 h-6 text-primary" /> REFramework (Praydog) Installation Guide
         </h2>
         <p className="text-xs text-textSecondary leading-relaxed">
-          Ce programme génère et configure dynamiquement le mod Lua pour Resident Evil 9. Voici comment l'utiliser directement avec votre jeu sur PC Windows.
+          This program dynamically generates and configures the Lua mod for Resident Evil 9. Here's how to use it with your Windows PC game.
         </p>
       </div>
 
@@ -22,8 +22,8 @@ export const InstallationGuideView: React.FC = () => {
             <Cpu className="w-4 h-4 text-primary" /> REFramework
           </h3>
           <p className="text-xs text-textSecondary leading-relaxed">
-            Installez REFramework (dinput8.dll) dans votre dossier principal du jeu :
-            <code className="block mt-2 p-2 bg-background border border-borderDark rounded text-[11px] text-primary">
+            Install REFramework (dinput8.dll) into your main game folder:
+            <code className="block mt-2 p-2 bg-background border border-border rounded text-[11px] text-primary">
               steamapps/common/RESIDENT EVIL 9/
             </code>
           </p>
@@ -34,10 +34,10 @@ export const InstallationGuideView: React.FC = () => {
             2
           </div>
           <h3 className="text-sm font-bold text-textMain flex items-center gap-2">
-            <FolderCheck className="w-4 h-4 text-secondary" /> Extraire le ZIP Mod
+            <FolderCheck className="w-4 h-4 text-secondary" /> Extract Mod ZIP
           </h3>
           <p className="text-xs text-textSecondary leading-relaxed">
-            Cliquez sur <strong>"Exporter Mod (ZIP)"</strong> dans ce programme et dézippez le contenu directement dans le dossier du jeu.
+            Click <strong>"Export Mod (ZIP)"</strong> in this program and unzip the contents directly into your game folder.
           </p>
         </div>
 
@@ -46,10 +46,10 @@ export const InstallationGuideView: React.FC = () => {
             3
           </div>
           <h3 className="text-sm font-bold text-textMain flex items-center gap-2">
-            <PlayCircle className="w-4 h-4 text-accent" /> Lancer RE9
+            <PlayCircle className="w-4 h-4 text-accent" /> Launch RE9
           </h3>
           <p className="text-xs text-textSecondary leading-relaxed">
-            Lancez Resident Evil 9. L'overlay REFramework (Touche <strong>Insert</strong>) affichera la seed active et gérera tout le randomizer en temps réel !
+            Launch Resident Evil 9. The REFramework overlay (Press <strong>Insert</strong>) will display the active seed and handle all randomization in real-time!
           </p>
         </div>
       </div>

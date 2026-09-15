@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Search, Eye, EyeOff, ShieldAlert, FileText } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { Search, Eye, EyeOff } from 'lucide-react';
 import { RandomizerConfig } from '../types/randomizer';
 import { generateRandomizerWorld } from '../utils/graphSolver';
 
@@ -10,23 +10,24 @@ interface SpoilerLogViewProps {
 export const SpoilerLogView: React.FC<SpoilerLogViewProps> = ({ config }) => {
   const [showSpoilers, setShowSpoilers] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const world = generateRandomizerWorld(config);
+  const world = useMemo(() => generateRandomizerWorld(config), [config]);
 
-  const filteredItems = world.itemSpoilers.filter(item =>
-    item.roomName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.randomizedItem.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredItems = useMemo(() => 
+    world.itemSpoilers.filter(item =>
+      item.roomName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.randomizedItem.toLowerCase().includes(searchTerm.toLowerCase())
+    ), [world.itemSpoilers, searchTerm]);
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex flex-wrap items-center justify-between bg-surface border border-borderDark p-4 rounded-2xl gap-4">
+      <div className="flex flex-wrap items-center justify-between bg-surface border border-border p-4 rounded-2xl gap-4">
         <div className="flex items-center gap-3">
           <div className="p-2.5 bg-accent/10 rounded-xl text-accent border border-accent/20">
             <Search className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-textMain">Spoiler Log & Registre de la Seed</h2>
-            <p className="text-xs text-textSecondary">Inspectez les emplacements d'objets et d'ennemis tirés au sort</p>
+            <h2 className="text-lg font-bold text-textMain">Spoiler Log & Seed Registry</h2>
+            <p className="text-xs text-textSecondary">Inspect randomized item & enemy placements</p>
           </div>
         </div>
 
@@ -37,8 +38,8 @@ export const SpoilerLogView: React.FC<SpoilerLogViewProps> = ({ config }) => {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Rechercher salle ou objet..."
-              className="bg-background border border-borderDark text-textMain text-xs rounded-xl pl-9 pr-3 py-2 focus:outline-none focus:border-accent w-56"
+              placeholder="Search room or item..."
+              className="bg-background border border-border text-textMain text-xs rounded-xl pl-9 pr-3 py-2 focus:outline-none focus:border-accent w-56"
             />
           </div>
 
@@ -51,31 +52,30 @@ export const SpoilerLogView: React.FC<SpoilerLogViewProps> = ({ config }) => {
             }`}
           >
             {showSpoilers ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            {showSpoilers ? 'Masquer les Spoilers' : 'Afficher les Spoilers'}
+            {showSpoilers ? 'Hide Spoilers' : 'Show Spoilers'}
           </button>
         </div>
       </div>
 
-      {/* Table view */}
-      <div className="bg-surface border border-borderDark rounded-2xl overflow-hidden shadow-xl">
+      <div className="bg-surface border border-border rounded-2xl overflow-hidden shadow-xl">
         <table className="w-full text-left text-xs text-textMain border-collapse">
           <thead>
-            <tr className="bg-background border-b border-borderDark text-textSecondary uppercase font-mono">
+            <tr className="bg-background border-b border-border text-textSecondary uppercase font-mono">
               <th className="p-3.5">Segment</th>
-              <th className="p-3.5">Emplacement / Salle</th>
-              <th className="p-3.5">Objet d'Origine</th>
-              <th className="p-3.5">Objet Randomized</th>
-              <th className="p-3.5">Ennemi Présent</th>
+              <th className="p-3.5">Location / Room</th>
+              <th className="p-3.5">Original Item</th>
+              <th className="p-3.5">Randomized Item</th>
+              <th className="p-3.5">Enemy Present</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-borderDark">
+          <tbody className="divide-y divide-border">
             {filteredItems.map((item, idx) => {
               const enemy = world.enemySpoilers[idx];
               return (
-                <tr key={idx} className="hover:bg-background/50 transition">
+                <tr key={`${item.roomName}-${idx}`} className="hover:bg-background/50 transition">
                   <td className="p-3.5 font-mono text-primary font-bold">Seg {item.segmentId}</td>
                   <td className="p-3.5 font-semibold text-textMain">{item.roomName}</td>
-                  <td className="p-3.5 text-textSecondary line-through decoration-borderDark">{item.originalItem}</td>
+                  <td className="p-3.5 text-textSecondary line-through decoration-border">{item.originalItem}</td>
                   <td className="p-3.5">
                     {showSpoilers ? (
                       <span className="font-mono font-bold text-accent bg-accent/10 px-2.5 py-1 rounded-lg border border-accent/20">

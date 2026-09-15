@@ -26,8 +26,8 @@ export const EnemySettingsCard: React.FC<EnemySettingsCardProps> = ({ settings, 
           <Skull className="w-5 h-5" />
         </div>
         <div>
-          <h2 className="text-lg font-bold text-textMain">🧟 Randomization des Ennemis</h2>
-          <p className="text-xs text-textSecondary">Courbe de difficulté, densité et liste d'exclusion anti-crash</p>
+          <h2 className="text-lg font-bold text-textMain">Enemy Randomization</h2>
+          <p className="text-xs text-textSecondary">Difficulty curve, density & anti-crash blacklist</p>
         </div>
       </div>
 
@@ -36,7 +36,7 @@ export const EnemySettingsCard: React.FC<EnemySettingsCardProps> = ({ settings, 
         <div>
           <div className="flex justify-between text-sm mb-2">
             <span className="text-textMain font-medium flex items-center gap-2">
-              <Gauge className="w-4 h-4 text-error" /> Curseur de Difficulté des Ennemis
+              <Gauge className="w-4 h-4 text-error" /> Enemy Difficulty
             </span>
             <span className="font-mono text-error font-bold">{settings.difficultyCurve}%</span>
           </div>
@@ -49,16 +49,16 @@ export const EnemySettingsCard: React.FC<EnemySettingsCardProps> = ({ settings, 
             className="w-full accent-error bg-background rounded-lg h-2"
           />
           <div className="flex justify-between text-[11px] text-textSecondary mt-1">
-            <span>0 (Lents & Esquivables)</span>
-            <span>50 (Équilibré)</span>
-            <span>100 (Rapides & Létaux)</span>
+            <span>0 (Slow & Dodgeable)</span>
+            <span>50 (Balanced)</span>
+            <span>100 (Fast & Lethal)</span>
           </div>
         </div>
 
         {/* Density Multiplier */}
         <div>
           <div className="flex justify-between text-sm mb-2">
-            <span className="text-textMain font-medium">Densité d'apparition</span>
+            <span className="text-textMain font-medium">Spawn Density</span>
             <span className="font-mono text-primary font-bold">{settings.densityMultiplier.toFixed(1)}x</span>
           </div>
           <input
@@ -82,15 +82,15 @@ export const EnemySettingsCard: React.FC<EnemySettingsCardProps> = ({ settings, 
           />
           <div>
             <span className="text-sm font-semibold text-textMain flex items-center gap-1.5">
-              <ShieldOff className="w-4 h-4 text-warning" /> Exclure les ennemis scriptés à crash
+              <ShieldOff className="w-4 h-4 text-warning" /> Exclude Scripted Crash Enemies
             </span>
-            <span className="text-xs text-textSecondary">Évite de remplacer les boss déclenchant une cinématique pour préserver le jeu</span>
+            <span className="text-xs text-textSecondary">Prevents replacing cutscene-triggering bosses to avoid crashes</span>
           </div>
         </label>
 
         {/* Allowed Enemies Checkboxes */}
         <div>
-          <label className="text-sm font-semibold text-textMain block mb-2">Types d'ennemis autorisés</label>
+          <label className="text-sm font-semibold text-textMain block mb-2">Allowed Enemy Types</label>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
             {AVAILABLE_ENEMIES.map((e) => {
               const selected = settings.allowedEnemies.includes(e);
