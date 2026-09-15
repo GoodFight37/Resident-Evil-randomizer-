@@ -1,28 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=Barlow:wght@300;400;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
   margin: 0;
-  background-color: #171717;
-  color: #FFFFFF;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: #0a0a0f;
+  color: #d4d4d4;
+  font-family: 'Barlow', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   overflow-x: hidden;
   user-select: none;
 }
 
-/* Custom scrollbar */
+/* Horror scanline overlay (Kyro-inspired, subtle) */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px);
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.6;
+}
+
+/* Custom scrollbar - horror red accent */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #171717;
+  background: #0a0a0f;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2F2F2F;
+  background: #2a2a2a;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #9E7FFF;
+  background: #c0392b;
+}
+
+/* Mono for seeds, display for headers */
+.font-mono { font-family: 'Share Tech Mono', monospace; }
+.font-display { font-family: 'Bebas Neue', cursive; letter-spacing: 2px; }
+
+/* Glow effects */
+.shadow-glow-sm { box-shadow: 0 0 10px rgba(158, 127, 255, 0.15); }
+.shadow-glow-lg { box-shadow: 0 0 20px rgba(158, 127, 255, 0.25); }
+.shadow-blood { box-shadow: 0 0 15px rgba(192, 57, 43, 0.3); }
+
+/* BioRand mesh pattern with horror tint */
+.bg-mesh-pattern {
+  background-image: 
+    radial-gradient(at 20% 30%, rgba(158, 127, 255, 0.05) 0%, transparent 50%),
+    radial-gradient(at 80% 70%, rgba(192, 57, 43, 0.04) 0%, transparent 50%);
 }

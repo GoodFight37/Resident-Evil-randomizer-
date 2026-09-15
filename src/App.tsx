@@ -50,6 +50,18 @@ export function App() {
     try { localStorage.setItem('biorand_re9_path', gamePath); } catch {}
   }, [gamePath]);
 
+  // Auto-detect RE9 install like Kyro's RE9-Randomiser (checks Steam libraries via VDF)
+  useEffect(() => {
+    if (gamePath.includes('Program Files') && window.electronAPI?.detectGamePath) {
+      window.electronAPI.detectGamePath().then(detected => {
+        if (detected && detected !== gamePath && detected.length > 5) {
+          setGamePath(detected);
+        }
+      }).catch(() => {});
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleBrowsePath = useCallback(async () => {
     if (window.electronAPI?.selectGameDirectory) {
       const selected = await window.electronAPI.selectGameDirectory();
@@ -110,8 +122,8 @@ export function App() {
       <main className="flex-1 pb-12 max-w-7xl mx-auto w-full">
         {activeTab === 'settings' && (
           <div className="p-6 space-y-8 animate-fadeIn">
-            {/* Intro Banner - English only, clarifies workflow like BioRand */}
-            <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+            {/* Intro Banner - English only, Kyro-style border-left red accent */}
+            <div className="bg-surface border border-border border-l-4 border-l-red-700 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-blood">
               <div>
                 <h2 className="text-sm font-bold text-textMain">Configure Your Randomized Run</h2>
                 <p className="text-xs text-textSecondary mt-1">All settings are deterministic with your <span className="text-primary font-mono font-bold">{config.seed}</span> seed. Change a preset or tweak below, then click <span className="text-white font-semibold">Inject & Install</span> or <span className="text-white font-semibold">Export ZIP</span>.</p>

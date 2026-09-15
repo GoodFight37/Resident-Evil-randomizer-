@@ -9,12 +9,18 @@ declare global {
       maximize: () => void;
       close: () => void;
       selectGameDirectory: () => Promise<string | null>;
+      browseGamePath: () => Promise<string | null>;
+      detectGamePath: () => Promise<string | null>;
+      checkReframework: (gamePath: string) => Promise<{ installed: boolean; hasAutorun: boolean; dllPath: string | null }>;
+      openFolder: (folderPath: string) => Promise<{ success: boolean; error?: string }>;
       installModFiles: (params: {
         gamePath: string;
         luaScript: string;
         jsonConfig: string;
         spoilerLog: string;
-      }) => Promise<{ success: boolean; error?: string; autorunPath?: string }>;
+      }) => Promise<{ success: boolean; error?: string; autorunPath?: string; dataPath?: string }>;
+      writeSeed: (args: any) => Promise<{ success: boolean; error?: string }>;
+      installLuaMod: (args: any) => Promise<{ success: boolean; error?: string }>;
       isDesktop?: boolean;
     };
   }
@@ -22,6 +28,13 @@ declare global {
 
 export const isDesktopApp = (): boolean => {
   return typeof window !== 'undefined' && !!window.electronAPI?.isDesktop;
+};
+
+export const detectGamePath = async (): Promise<string | null> => {
+  if (window.electronAPI?.detectGamePath) {
+    try { return await window.electronAPI.detectGamePath(); } catch { return null; }
+  }
+  return null;
 };
 
 export async function directInstallToGame(config: RandomizerConfig, gamePath: string) {

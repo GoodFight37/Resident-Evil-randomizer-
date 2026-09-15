@@ -1,6 +1,12 @@
 node_modules
 dist
 dist-electron
+dist_electron
+out
 .cache
+*.log
+.DS_Store
 *.zip
 *.exe
+*.snap
+*.AppImage
